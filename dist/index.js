@@ -18998,6 +18998,24 @@
         }
       }
 
+      // Helper function to safely stringify objects with circular references
+      function safeStringify(obj) {
+        const seen = new WeakSet();
+        return JSON.stringify(
+          obj,
+          (key, value) => {
+            if (typeof value === 'object' && value !== null) {
+              if (seen.has(value)) {
+                return '[Circular]'; // Replace circular references with [Circular]
+              }
+              seen.add(value);
+            }
+            return value;
+          },
+          2
+        );
+      }
+
       // Returns false if no more submissions should be added.
       function addToSubmissions(params) {
         const {
@@ -19008,19 +19026,15 @@
           submissions,
         } = params;
 
-        // Debugging: Log the entire API response to verify its structure.
-        console.log(
-          'LeetCode API Response:',
-          JSON.stringify(response, null, 2)
-        );
+        // Use the safe stringifier to log the API response
+        console.log('LeetCode API Response:', safeStringify(response));
 
-        // Check for the correct structure in the API response.
         const submissionList =
           response?.data?.data?.submissionList?.submissions || [];
 
         if (!Array.isArray(submissionList)) {
           console.error('Invalid API response: submissions is not an array.');
-          return false; // Stop execution if the response structure is invalid.
+          return false;
         }
 
         for (const submission of submissionList) {
