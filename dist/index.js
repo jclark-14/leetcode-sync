@@ -19008,18 +19008,19 @@
           submissions,
         } = params;
 
-        // Debugging: Log the entire API response to check its structure
+        // Debugging: Log the entire API response to verify its structure.
         console.log(
           'LeetCode API Response:',
-          JSON.stringify(response.data, null, 2)
+          JSON.stringify(response, null, 2)
         );
 
-        // Handle potential missing or empty response gracefully
-        const submissionList = response?.data?.data?.recentSubmissions || [];
+        // Check for the correct structure in the API response.
+        const submissionList =
+          response?.data?.data?.submissionList?.submissions || [];
 
         if (!Array.isArray(submissionList)) {
           console.error('Invalid API response: submissions is not an array.');
-          return false;
+          return false; // Stop execution if the response structure is invalid.
         }
 
         for (const submission of submissionList) {
