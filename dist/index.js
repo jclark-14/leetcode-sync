@@ -19015,8 +19015,7 @@
         );
 
         // Handle potential missing or empty response gracefully
-        const submissionList =
-          response?.data?.data?.submissionList?.submissions || [];
+        const submissionList = response?.data?.data?.recentSubmissions || [];
 
         if (!Array.isArray(submissionList)) {
           console.error('Invalid API response: submissions is not an array.');
